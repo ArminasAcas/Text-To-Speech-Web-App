@@ -1,8 +1,4 @@
 .generation-form {
-    border: black solid 2px;
-    border-radius: 25px;
-    background-color: rgb(80, 117, 240);
-    padding: 25px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -75,4 +71,8 @@
 
 .generation-form__button:hover {
     background-color: rgb(130, 240, 255);
+}
+
+.generation-audio {
+    text-align: center;
 }
