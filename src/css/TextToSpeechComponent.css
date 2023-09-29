@@ -58,6 +58,13 @@
     font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif
 }
 
+.generation-form__warning {
+   color: rgb(255, 187, 0);
+   font-size: small;
+   font-weight: bold;
+   border-radius: 25px;
+}
+
 .generation-form__button {
     border-radius: 10px;
     max-width: 300px;
