@@ -1,10 +1,10 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import TextToSpeech from './components/TextToSpeechComponent'
+import App from './components/App'
 import "./css/Page.css"
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-      <TextToSpeech/>
+      <App></App>
   </React.StrictMode>,
 )
