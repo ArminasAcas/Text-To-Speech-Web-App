@@ -57,6 +57,7 @@ export default function TextToSpeech() {
                 if(audio) URL.revokeObjectURL(audio);
                 setAudio(URL.createObjectURL(audioData));
                 setSuccess(true);
+                if (warning) setWarning(false);
             });
         } 
         catch (error){
@@ -81,8 +82,7 @@ export default function TextToSpeech() {
     if(success) setTimeout( () => { setSuccess(false); }, 3000);
 
     return (
-        <>
-        <div>
+        <div className="generation-block">
             <form className="generation-form container">
                 <div className="generation-form__options">
                     {selectLanguage}
@@ -92,20 +92,16 @@ export default function TextToSpeech() {
                 <div className="generation-form__text-block">
                     <div>
                         <Label label="Tekstas" for="text"></Label>
-                        {warning ? <span className="generation-form__warning">[Tuščias teksto laukas !]</span> : null}
-                        {success ? <span className="generation-form__success">[Sėkmingai sugeneruotas garso takelis]</span> : null}
+                        {warning ? <span className="generation-form__warning"> [Tuščias teksto laukas !]</span> : null}
+                        {success ? <span className="generation-form__success"> [Sėkmingai sugeneruotas garso takelis]</span> : null}
                     </div>
 
                     <textarea onChange={e => {setText(e.target.value)}} maxLength={500} className="generation-form__text-area" id="text"></textarea>
                     <button className="generation-form__button" onClick={handleClick} >Generuoti balso takelį</button>
                 </div>
             </form>
-        </div>
 
-        <div className="generation-audio">
             {audio ?  <AudioPlayer audio={audio}></AudioPlayer>: null }
         </div>
-        </>
-        
     )
 }
