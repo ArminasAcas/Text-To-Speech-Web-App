@@ -5,6 +5,19 @@ import "../css/Container.css"
 import Select from "./SelectComponent";
 import Label from "./LabelComponent";
 
+const buttonTextOptions = {
+    default: "Generuoti balso takelį",
+    generated: "Sėkmingai sugeneruotas garso takelis",
+    generating: "Generuojamas garso takelis...",
+    error: "Įvyko klaida",
+    warning: "Tuščias teksto laukas"
+};
+
+const languagesEN = ["English","Lithuanian"];
+const languagesLT = ["Anglų", "Lietuvių"];
+const gendersEN = ["MALE", "FEMALE"];
+const gendersLT = ["Vyras", "Moteris"];
+
 export default function TextToSpeech() {
 
     const [gender, setGender] = useState("MALE");
@@ -13,18 +26,16 @@ export default function TextToSpeech() {
     const [audio, setAudio] = useState("");
     const [warning, setWarning] = useState(false);
     const [success, setSuccess] = useState(false);
-
-    const languagesEN = ["English","Lithuanian"];
-    const languagesLT = ["Anglų", "Lietuvių"];
-    const gendersEN = ["MALE", "FEMALE"];
-    const gendersLT = ["Vyras", "Moteris"];
-  
+    const [error, setError] = useState(false);
+    const [buttonText, setButtonText] = useState(buttonTextOptions.default);
+    const maxCharacters = 512;
+    
     function handleClick(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
         e.preventDefault();
 
         if(!text || text.length <= 0) 
         {
-            if (!warning) setWarning(true);
+            setWarning(true);
             return;
         }
         
@@ -37,6 +48,7 @@ export default function TextToSpeech() {
             
         try
         {
+            setButtonText(buttonTextOptions.generating);
             fetch
             (
                 "http://localhost:4000/send-data", 
@@ -49,21 +61,50 @@ export default function TextToSpeech() {
             .then(async (res) => {
                 if (!res.ok) 
                 {
-                    alert("Įvyko klaida !");
+                    setError(true);
                     return;
                 }
                 
                 const audioData = await res.blob();
                 if(audio) URL.revokeObjectURL(audio);
                 setAudio(URL.createObjectURL(audioData));
+
                 setSuccess(true);
                 if (warning) setWarning(false);
+                if (error) setError(false);
+            })
+            .catch(() => {
+                setError(true);
             });
         } 
-        catch (error){
-            alert("Įvyko klaida !");
+        catch{
+            setError(true);
         }
     };
+
+    if (success){
+        if (buttonText != buttonTextOptions.generated) setButtonText(buttonTextOptions.generated);
+        setTimeout( () => {
+            setButtonText(buttonTextOptions.default);
+            setSuccess(false);
+        }, 3000);
+    }
+
+    if (warning){
+        if (buttonText != buttonTextOptions.warning) setButtonText(buttonTextOptions.warning);
+        setTimeout( () => {
+            setButtonText(buttonTextOptions.default);
+            setWarning(false);
+        }, 3000);
+    }
+
+    if (error){
+        if (buttonText != buttonTextOptions.error) setButtonText(buttonTextOptions.error);
+        setTimeout( () => {
+            setButtonText(buttonTextOptions.default);
+            setError(false);
+        }, 3000);
+    }
     
     const selectLanguage = (
         <>
@@ -79,8 +120,6 @@ export default function TextToSpeech() {
         </>
     );
 
-    if(success) setTimeout( () => { setSuccess(false); }, 3000);
-
     return (
         <div className="generation-block">
             <form className="generation-form container">
@@ -90,14 +129,16 @@ export default function TextToSpeech() {
                 </div>
 
                 <div className="generation-form__text-block">
-                    <div>
-                        <Label label="Tekstas" for="text"></Label>
-                        {warning ? <span className="generation-form__warning"> [Tuščias teksto laukas !]</span> : null}
-                        {success ? <span className="generation-form__success"> [Sėkmingai sugeneruotas garso takelis]</span> : null}
-                    </div>
-
-                    <textarea onChange={e => {setText(e.target.value)}} maxLength={500} className="generation-form__text-area" id="text"></textarea>
-                    <button className="generation-form__button" onClick={handleClick} >Generuoti balso takelį</button>
+                    <Label label={"Tekstas (" + text.length + "/" + maxCharacters + ")"} for="text"></Label>
+                    <textarea onChange={e => {setText(e.target.value)}} maxLength={maxCharacters} className="generation-form__text-area" id="text"></textarea>
+                    <button 
+                    className={
+                    `generation-form__button 
+                    ${success ? "generation-form__button-success" : null}
+                    ${warning ? "generation-form__button-warning" : null}
+                    ${error ? "generation-form__button-error" : null}`
+                    } 
+                    onClick={handleClick}>{buttonText}</button>
                 </div>
             </form>
 

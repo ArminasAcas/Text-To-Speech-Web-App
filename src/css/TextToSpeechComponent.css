@@ -44,30 +44,27 @@
     font-family: Arial, Helvetica, sans-serif;
 }
 
-.generation-form__warning {
-   color: rgb(255, 187, 0);
-   font-size: small;
-   font-weight: bold;
-   border-radius: 25px;
-}
-
-.generation-form__success {
-    color: rgb(35, 255, 35);
-    font-size: small;
-    font-weight: bold;
-    border-radius: 25px;
- }
-
 .generation-form__button {
     border-radius: 10px;
-    max-width: 300px;
     padding: 15px 20px 15px 20px;
     font-size: x-large;
     font-family: Arial, Helvetica, sans-serif;
 }
 
+.generation-form__button-success {
+    background-color: rgb(147, 255, 146);
+}
+
+.generation-form__button-warning {
+    background-color: rgb(255, 234, 169);
+}
+
+.generation-form__button-error {
+    background-color: rgb(255, 184, 184);
+}
+
 .generation-form__button:hover {
-    background-color: rgb(130, 240, 255);
+     background-color: rgb(130, 240, 255);
 }
 
 .generation-audio {
